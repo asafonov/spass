@@ -12,4 +12,3 @@ def generate(a):
        next_index = random.randrange(alphabet_len)
        ret += alphabet[next_index]
     return ret
-
