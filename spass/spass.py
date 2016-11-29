@@ -34,3 +34,32 @@ def set(a):
     spass.storage.save(data)
     return a['password']
     
+def dump_export(a):
+    check_params(a, ['file'])
+    data = load_data()
+    password = False
+    if 'password' in a:
+        password = a['password']
+    out = {}
+    for k in data:
+        item = spass.crypt.encrypt(data[k])
+        if password:
+            out[k] = spass.crypt.key_encrypt(item, password)
+        else:
+            out[k] = item
+    spass.storage.save_json(out, a['file'])
+
+def dump_import(a):
+    check_params(a, ['file'])
+    data = load_data()
+    password = False
+    if 'password' in a:
+        password = a['password']
+    new_data = spass.storage.load_json(a['file'])
+    for k in new_data:
+        if password:
+            item = spass.crypt.key_encrypt(new_data[k], password)
+        else:
+            item = new_data[k]
+        data[k] = spass.crypt.encrypt(item)
+    spass.storage.save(data)

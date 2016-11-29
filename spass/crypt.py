@@ -2,6 +2,9 @@ import spass.device, hashlib
 
 def encrypt(s, password = ''):
     key = get_key(password)
+    return key_encrypt(s, key)
+
+def key_encrypt(s, key):
     key_len = len(key)
     s_len = len(s)
     ret = ''
