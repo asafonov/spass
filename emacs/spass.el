@@ -10,5 +10,11 @@
   (kill-new password)
   (message "Done")
 )
+(defun spass-set(account  password)
+  (interactive "sPlease specify the account: \nsEnter password: ")
+  (setq password (shell-command-to-string (concat "spass --set --account " account " --password " password)))
+  (kill-new password)
+  (message "Done")
+)
 
 (provide 'spass)
