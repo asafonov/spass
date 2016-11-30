@@ -34,6 +34,15 @@ def set(a):
     spass.storage.save(data)
     return a['password']
     
+def delete(a):
+    check_params(a, ['account'])
+    data = load_data()
+    if a['account'] not in data:
+        raise ValueError("account doesn't exist")
+    del data[a['account']]
+    spass.storage.save(data)
+    return True
+
 def dump_export(a):
     check_params(a, ['file'])
     data = load_data()
@@ -48,6 +57,7 @@ def dump_export(a):
         else:
             out[k] = item
     spass.storage.save_json(out, a['file'])
+    return True
 
 def dump_import(a):
     check_params(a, ['file'])
@@ -63,3 +73,4 @@ def dump_import(a):
             item = new_data[k]
         data[k] = spass.crypt.encrypt(item)
     spass.storage.save(data)
+    return True

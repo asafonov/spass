@@ -2,7 +2,7 @@ import os, sys, getopt, importlib
 
 def main():
     argv = sys.argv[1:]
-    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "generate", "get=", "set=", "export", "import"])
+    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate"])
     func = ''
     func_argv = {}
     module = 'spass.spass'
@@ -15,6 +15,9 @@ def main():
             func_argv['account'] = a
         if o == '--get':
             func = 'get'
+            func_argv['account'] = a
+        if o == '--delete':
+            func = 'delete'
             func_argv['account'] = a
         if o == '--set':
             func = 'set'
