@@ -47,7 +47,7 @@ def daemon():
     while True:
         client_connection, client_address = listen_socket.accept()
         request = client_connection.recv(1024)
-        print(request)
+        req_s = request.decode('utf-8').split("\n")
 
         http_response = """\
 HTTP/1.1 200 OK
