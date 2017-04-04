@@ -2,7 +2,7 @@ import os, sys, getopt, importlib
 
 def main():
     argv = sys.argv[1:]
-    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate"])
+    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate", "daemon"])
     func = ''
     func_argv = {}
     module = 'spass.spass'
@@ -32,10 +32,13 @@ def main():
             func_argv['length'] = a
         if o == '--file':
             func_argv['file'] = a
+        if o == '--daemon':
+            daemon()
+            return True
     print(getattr(importlib.import_module(module), func)(func_argv))
 
 def daemon():
-    import socket
+    import socket, spass.http
 
     HOST, PORT = '', 9092
 
@@ -48,18 +51,8 @@ def daemon():
         client_connection, client_address = listen_socket.accept()
         request = client_connection.recv(1024)
         req_s = request.decode('utf-8').split("\n")
+        http_response = spass.http.show(req_s[0])
 
-        http_response = """\
-HTTP/1.1 200 OK
-Content-Type: text/html; charset=UTF-8
-
-<html>
-<head></head>
-<body>
-<h1>Hello world<h1>
-</body>
-</html>
-"""
         client_connection.sendall(http_response.encode("utf-8"))
         client_connection.close()
 
