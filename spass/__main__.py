@@ -51,8 +51,14 @@ def daemon():
 
         http_response = """\
 HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
 
-Hello world
+<html>
+<head></head>
+<body>
+<h1>Hello world<h1>
+</body>
+</html>
 """
         client_connection.sendall(http_response.encode("utf-8"))
         client_connection.close()
