@@ -28,6 +28,7 @@ def get(account):
     return get_header("200 OK") + crypt.encrypt(data[account])
 
 def dele(account):
+    account = urllib.parse.unquote(account)
     print('Deleting ' + account)
     if account not in data:
         return error404()
