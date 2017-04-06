@@ -1,4 +1,5 @@
 from spass import spass, crypt, storage
+import urllib.parse
 
 data = spass.load_data()
 
@@ -20,6 +21,7 @@ def get_header(status, params = {}):
     return header + "\n"
 
 def get(account):
+    account = urllib.parse.unquote(account)
     print('Getting ' + account)
     if account not in data:
         return error404()
@@ -94,7 +96,7 @@ def main_page():
 
             function show(button, account) {
                 get('/get/' + account, function(password) {
-                    button.parentNode.parentNode.parentNode.getElementsByTagName('td')[1].innerHTML = password;
+                    button.parentNode.parentNode.parentNode.getElementsByTagName('td')[1].innerHTML = password.replace('<', '&lt;').replace('>', '&gt;');
                 });
             }
 
