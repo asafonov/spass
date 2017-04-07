@@ -15,7 +15,10 @@ def load_data():
 def update(a):
     check_params(a, ['account'])
     data = load_data()
-    password = spass.password.generate(a)
+    simple = False
+    if 'simple' in a:
+        simple = a['simple']
+    password = spass.password.generate(a, simple)
     data[a['account']] = spass.crypt.encrypt(password)
     spass.storage.save(data)
     return password
