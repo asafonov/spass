@@ -2,11 +2,14 @@ import os, sys, getopt, importlib
 
 def main():
     argv = sys.argv[1:]
-    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate", "daemon", "simple"])
+    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate", "daemon", "simple", "clip"])
     func = ''
     func_argv = {}
     module = 'spass.spass'
+    xclip = False
     for o, a in opts:
+        if o == '--clip':
+            xclip = True
         if o == '--generate':
             func = 'generate'
             module = 'spass.password'
@@ -37,7 +40,11 @@ def main():
         if o == '--daemon':
             daemon()
             return True
-    print(getattr(importlib.import_module(module), func)(func_argv))
+    res = getattr(importlib.import_module(module), func)(func_argv)
+    if xclip:
+        os.system('echo "' + res.replace('"', '\"') + '" | xclip -selection clipboard')
+    else:
+        print(res)
 
 def daemon():
     import socket, spass.http
