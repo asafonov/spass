@@ -2,14 +2,14 @@ import os, sys, getopt, importlib
 
 def main():
     argv = sys.argv[1:]
-    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate", "daemon", "simple", "clip"])
+    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate", "daemon", "simple", "print"])
     func = ''
     func_argv = {}
     module = 'spass.spass'
-    xclip = False
+    xclip = True
     for o, a in opts:
-        if o == '--clip':
-            xclip = True
+        if o == '--print':
+            xclip = False
         if o == '--generate':
             func = 'generate'
             module = 'spass.password'
