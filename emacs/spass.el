@@ -1,6 +1,6 @@
 (defun spass-get(account)
   (interactive "sPlease specify the account: ")
-  (setq password (shell-command-to-string (concat "spass --get " account)))
+  (setq password (shell-command-to-string (concat "spass --print --get " account)))
   (kill-new password)
   (message "Done")
 )
