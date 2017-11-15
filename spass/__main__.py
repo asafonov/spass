@@ -41,7 +41,7 @@ def main():
             daemon()
             return True
     res = getattr(importlib.import_module(module), func)(func_argv)
-    if xclip:
+    if xclip and isinstance(res, str):
         os.system('echo "' + res.replace('"', '\"') + '" | xclip -selection clipboard')
     else:
         print(res)
