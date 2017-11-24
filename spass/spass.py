@@ -56,7 +56,7 @@ def dump_export(a):
     for k in data:
         item = spass.crypt.encrypt(data[k])
         if password:
-            out[k] = spass.crypt.key_encrypt(item, password)
+            out[k] = spass.crypt.key_encrypt(item, spass.crypt.hash(password + k))
         else:
             out[k] = item
     spass.storage.save_json(out, a['file'])
@@ -71,7 +71,7 @@ def dump_import(a):
     new_data = spass.storage.load_json(a['file'])
     for k in new_data:
         if password:
-            item = spass.crypt.key_encrypt(new_data[k], password)
+            item = spass.crypt.key_encrypt(new_data[k], spass.crypt.hash(password + k))
         else:
             item = new_data[k]
         data[k] = spass.crypt.encrypt(item)

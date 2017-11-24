@@ -15,3 +15,6 @@ def key_encrypt(s, key):
 def get_key(password = ''):
     key = password + str(spass.device.get_device_id()) + spass.device.get_username()
     return hashlib.sha256(key.encode()).hexdigest()
+
+def hash(s):
+    return hashlib.sha256(s.encode()).hexdigest()
