@@ -2,7 +2,7 @@ import os, sys, getopt, importlib, spass.storage
 
 def main():
     argv = sys.argv[1:]
-    opts, args = getopt.getopt(argv, "", ["set-password=", "password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate", "daemon", "simple", "print", "prompt", "set-password-prompt"])
+    opts, args = getopt.getopt(argv, "", ["set-password=", "password=", "length=", "file=", "update=", "get=", "set=", "delete=", "key=", "export", "import", "generate", "daemon", "simple", "print", "prompt", "set-password-prompt"])
     func = ''
     func_argv = {}
     password = spass.storage.password()
@@ -52,6 +52,8 @@ def main():
             func_argv['length'] = a
         if o == '--file':
             func_argv['file'] = a
+        if o == '--key':
+            func_argv['key'] = a
         if o == '--daemon':
             daemon()
             return True

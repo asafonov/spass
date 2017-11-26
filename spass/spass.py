@@ -52,14 +52,15 @@ def delete(a):
 def dump_export(a):
     check_params(a, ['file'])
     data = load_data()
-    password = False
-    if 'password' in a:
-        password = a['password']
+    key = False
+    if 'key' in a:
+        key = a['key']
     out = {}
+    password = a['password'] if 'password' in a else ''
     for k in data:
-        item = spass.crypt.decrypt(data[k])
-        if password:
-            out[k] = spass.crypt.key_encrypt(item, spass.crypt.hash(password + k))
+        item = spass.crypt.decrypt(data[k], password)
+        if key:
+            out[k] = spass.crypt.key_encrypt(item, spass.crypt.hash(key + k))
         else:
             out[k] = item
     spass.storage.save_json(out, a['file'])
@@ -68,15 +69,16 @@ def dump_export(a):
 def dump_import(a):
     check_params(a, ['file'])
     data = load_data()
-    password = False
-    if 'password' in a:
-        password = a['password']
+    key = False
+    if 'key' in a:
+        key = a['key']
     new_data = spass.storage.load_json(a['file'])
+    password = a['password'] if 'password' in a else ''
     for k in new_data:
-        if password:
-            item = spass.crypt.key_decrypt(new_data[k], spass.crypt.hash(password + k))
+        if key:
+            item = spass.crypt.key_decrypt(new_data[k], spass.crypt.hash(key + k))
         else:
             item = new_data[k]
-        data[k] = spass.crypt.encrypt(item)
+        data[k] = spass.crypt.encrypt(item, password)
     spass.storage.save(data)
     return True
