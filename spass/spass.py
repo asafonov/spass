@@ -28,7 +28,7 @@ def get(a):
     data = load_data()
     if a['account'] not in data:
         raise ValueError("account doesn't exist")
-    return spass.crypt.encrypt(data[a['account']])
+    return spass.crypt.decrypt(data[a['account']])
 
 def set(a):
     check_params(a, ['account', 'password'])
@@ -54,7 +54,7 @@ def dump_export(a):
         password = a['password']
     out = {}
     for k in data:
-        item = spass.crypt.encrypt(data[k])
+        item = spass.crypt.decrypt(data[k])
         if password:
             out[k] = spass.crypt.key_encrypt(item, spass.crypt.hash(password + k))
         else:
@@ -71,7 +71,7 @@ def dump_import(a):
     new_data = spass.storage.load_json(a['file'])
     for k in new_data:
         if password:
-            item = spass.crypt.key_encrypt(new_data[k], spass.crypt.hash(password + k))
+            item = spass.crypt.key_decrypt(new_data[k], spass.crypt.hash(password + k))
         else:
             item = new_data[k]
         data[k] = spass.crypt.encrypt(item)
