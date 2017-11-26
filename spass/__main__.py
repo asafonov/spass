@@ -2,7 +2,7 @@ import os, sys, getopt, importlib
 
 def main():
     argv = sys.argv[1:]
-    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate", "daemon", "simple", "print"])
+    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate", "daemon", "simple", "print", "prompt"])
     func = ''
     func_argv = {}
     module = 'spass.spass'
@@ -10,6 +10,8 @@ def main():
     for o, a in opts:
         if o == '--print':
             xclip = False
+        if o == '--prompt':
+            func_argv['password'] = input('Please enter your password: ')
         if o == '--generate':
             func = 'generate'
             module = 'spass.password'
