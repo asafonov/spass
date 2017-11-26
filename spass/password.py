@@ -1,16 +1,20 @@
 import random
 
+simple_alphabet = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+alphabet = simple_alphabet + "!#?@-*()[]\/+%:;&{},.<>"
+
 def generate(a, simple = False):
     if 'length' in a:
         length = int(a['length'])
     else:
         length = 16
-    alphabet = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    if not simple:
-        alphabet += "!#?@-*()[]\/+%:;&{},.<>"
+    alpha = alphabet
+    if simple:
+        alpha = simple_alphabet
+        
     ret = ''
-    alphabet_len = len(alphabet)
+    alphabet_len = len(alpha)
     for i in range(length):
        next_index = random.randrange(alphabet_len)
-       ret += alphabet[next_index]
+       ret += alpha[next_index]
     return ret
