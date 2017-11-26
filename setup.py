@@ -5,7 +5,7 @@ except ImportError:
 
 config = {
     'description': 'spass - Smart password manager',
-    'version': '0.1',
+    'version': '0.3',
     'packages': ['spass'],
     'scripts': [],
     'name': 'spass',
