@@ -1,13 +1,26 @@
-import os, sys, getopt, importlib
+import os, sys, getopt, importlib, spass.storage
 
 def main():
     argv = sys.argv[1:]
-    opts, args = getopt.getopt(argv, "", ["password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate", "daemon", "simple", "print", "prompt"])
+    opts, args = getopt.getopt(argv, "", ["set-password=", "password=", "length=", "file=", "update=", "get=", "set=", "delete=", "export", "import", "generate", "daemon", "simple", "print", "prompt", "set-password-prompt"])
     func = ''
     func_argv = {}
+    password = spass.storage.password()
+    if password:
+        func_argv['password'] = password
     module = 'spass.spass'
     xclip = True
     for o, a in opts:
+        if o == '--set-password':
+            xclip = False
+            module = 'spass.storage'
+            func = 'save_password'
+            func_argv['password'] = a
+        if o == '--set-password-prompt':
+            xclip = False
+            module = 'spass.storage'
+            func = 'save_password'
+            func_argv['password'] = input('Please enter your password: ')
         if o == '--print':
             xclip = False
         if o == '--prompt':
