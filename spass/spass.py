@@ -18,22 +18,25 @@ def update(a):
     simple = False
     if 'simple' in a:
         simple = a['simple']
-    password = spass.password.generate(a, simple)
-    data[a['account']] = spass.crypt.encrypt(password)
+    generated = spass.password.generate(a, simple)
+    password = a['password'] if 'password' in a else ''
+    data[a['account']] = spass.crypt.encrypt(generated, password)
     spass.storage.save(data)
-    return password
+    return generated
 
 def get(a):
     check_params(a, ['account'])
     data = load_data()
     if a['account'] not in data:
         raise ValueError("account doesn't exist")
-    return spass.crypt.decrypt(data[a['account']])
+    password = a['password'] if 'password' in a else ''
+    return spass.crypt.decrypt(data[a['account']], password)
 
 def set(a):
     check_params(a, ['account', 'password'])
     data = load_data()
-    data[a['account']] = spass.crypt.encrypt(a['password'])
+    password = a['password'] if 'password' in a else ''
+    data[a['account']] = spass.crypt.encrypt(a['password'], password)
     spass.storage.save(data)
     return a['password']
     
