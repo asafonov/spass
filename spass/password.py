@@ -1,7 +1,7 @@
 import random
 
 simple_alphabet = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-alphabet = simple_alphabet + "!#?@-*()[]\/+%:;&{},.<>"
+alphabet = simple_alphabet + "!#?@-*()[]\/+%:;&{},.<>_"
 
 def generate(a, simple = False):
     if 'length' in a:
