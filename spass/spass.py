@@ -20,7 +20,7 @@ def update(a):
         simple = a['simple']
     generated = spass.password.generate(a, simple)
     password = a['password'] if 'password' in a else ''
-    data[a['account']] = spass.crypt.encrypt(generated, password)
+    data[a['account']] = spass.crypt.encrypt(generated, password + a['account'])
     spass.storage.save(data)
     return generated
 
@@ -30,13 +30,13 @@ def get(a):
     if a['account'] not in data:
         raise ValueError("account doesn't exist")
     password = a['password'] if 'password' in a else ''
-    return spass.crypt.decrypt(data[a['account']], password)
+    return spass.crypt.decrypt(data[a['account']], password + a['account'])
 
 def set(a):
     check_params(a, ['account', 'password'])
     data = load_data()
     password = a['password'] if 'password' in a else ''
-    data[a['account']] = spass.crypt.encrypt(a['password'], password)
+    data[a['account']] = spass.crypt.encrypt(a['password'], password + a['account'])
     spass.storage.save(data)
     return a['password']
     
@@ -58,7 +58,7 @@ def dump_export(a):
     out = {}
     password = a['password'] if 'password' in a else ''
     for k in data:
-        item = spass.crypt.decrypt(data[k], password)
+        item = spass.crypt.decrypt(data[k], password + k)
         if key:
             out[k] = spass.crypt.key_encrypt(item, spass.crypt.hash(key + k))
         else:
@@ -79,6 +79,6 @@ def dump_import(a):
             item = spass.crypt.key_decrypt(new_data[k], spass.crypt.hash(key + k))
         else:
             item = new_data[k]
-        data[k] = spass.crypt.encrypt(item, password)
+        data[k] = spass.crypt.encrypt(item, password + k)
     spass.storage.save(data)
     return True
