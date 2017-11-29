@@ -2,10 +2,11 @@ try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
+from spass.version import version
 
 config = {
     'description': 'spass - Smart password manager',
-    'version': '0.3',
+    'version': version,
     'packages': ['spass'],
     'scripts': [],
     'name': 'spass',
