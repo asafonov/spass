@@ -5,9 +5,7 @@ def main():
     opts, args = getopt.getopt(argv, "", ["set-password=", "password=", "length=", "file=", "update=", "get=", "set=", "delete=", "key=", "export", "import", "generate", "daemon", "simple", "print", "prompt", "set-password-prompt", "version"])
     func = ''
     func_argv = {}
-    password = spass.storage.password()
-    if password:
-        func_argv['password'] = password
+    default_params = spass.storage.get_params()
     module = 'spass.spass'
     xclip = True
     for o, a in opts:

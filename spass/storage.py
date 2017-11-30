@@ -1,11 +1,14 @@
 import json, os
 import spass.crypt
 
+def get_working_dir():
+    return os.path.expanduser('~') + './spass/'
+
 def load():
-    return load_json(os.path.expanduser('~') + '/.spass/data')
+    return load_json(get_working_dir() + 'data')
 
 def save(data):
-    save_json(data, os.path.expanduser('~') + '/.spass/data')
+    save_json(data, get_working_dir() + 'data')
 
 def save_json(data, filename):
     with open(filename, 'w') as outfile:
@@ -17,20 +20,18 @@ def load_json(filename):
     f.close()
     return data
     
-def get_password_filename():
-    return os.path.expanduser('~') + '/.spass/.password'
-    
-def password():
-    filename = get_password_filename()
-    if os.path.exists(filename):
-        f = open(filename)
-        data = f.read()
-        f.close()
-        return spass.crypt.decrypt(data)
-    return False
-    
 def save_password(argv):
-    filename = get_password_filename()
-    f = open(filename, 'w')
-    f.write(spass.crypt.encrypt(argv['password']))
-    f.close()
+    params = get_params()
+    params['--password'] = spass.crypt.encrypt(argv['--password'])
+    save_json(params, get_params_filename())
+
+def get_params_filename():
+    return get_working_dir() + 'params'
+
+def get_params():
+    if os.path.exists(get_params_filename()):
+        data = load_json(get_params_filename())
+        if '--password' in data:
+            data['--password'] = spass.crypt.decrypt(data['--password'])
+        return data
+    return {}
