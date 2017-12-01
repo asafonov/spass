@@ -2,7 +2,7 @@ import json, os
 import spass.crypt
 
 def get_working_dir():
-    return os.path.expanduser('~') + './spass/'
+    return os.path.expanduser('~') + '/.spass/'
 
 def load():
     return load_json(get_working_dir() + 'data')
