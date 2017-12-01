@@ -8,6 +8,7 @@ def main():
     default_params = spass.storage.get_params()
     module = 'spass.spass'
     xclip = True
+    opts = list(default_params.items()) + opts
     for o, a in opts:
         if o == '--set-password':
             xclip = False
