@@ -22,7 +22,7 @@ def load_json(filename):
     
 def save_password(argv):
     params = get_params()
-    params['--password'] = spass.crypt.encrypt(argv['--password'])
+    params['--password'] = spass.crypt.encrypt(argv['password'])
     save_json(params, get_params_filename())
 
 def get_params_filename():
