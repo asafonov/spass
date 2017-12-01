@@ -55,7 +55,7 @@ def main():
             func_argv['key'] = a
         if o == '--version':
             from spass.version import version
-            print('Spass Smart Password Manager. Version: ' + version)
+            print('SPass Smart Password Manager. Version: ' + version)
             return True
         if o == '--daemon':
             daemon()
