@@ -25,7 +25,7 @@ def get(account):
     print('Getting ' + account)
     if account not in data:
         return error404()
-    return get_header("200 OK") + crypt.encrypt(data[account])
+    return get_header("200 OK") + crypt.decrypt(data[account], account)
 
 def dele(account):
     account = urllib.parse.unquote(account)
