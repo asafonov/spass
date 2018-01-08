@@ -33,12 +33,12 @@ def get(a):
     return spass.crypt.decrypt(data[a['account']], password + a['account'])
 
 def set(a):
-    check_params(a, ['account', 'password'])
+    check_params(a, ['account'])
     data = load_data()
     password = a['password'] if 'password' in a else ''
-    data[a['account']] = spass.crypt.encrypt(a['password'], password + a['account'])
+    data[a['account']] = spass.crypt.encrypt(a['set_password'], password + a['account'])
     spass.storage.save(data)
-    return a['password']
+    return a['set_password']
     
 def delete(a):
     check_params(a, ['account'])

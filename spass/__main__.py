@@ -41,6 +41,7 @@ def main():
         if o == '--set':
             func = 'set'
             func_argv['account'] = a
+            func_argv['set_password'] = args[0]
         if o == '--export':
             func = 'dump_export'
         if o == '--import':
