@@ -41,7 +41,7 @@
   (shell-command (concat "spass --export --key " key " --file " filename))
   (message "Done")
 )
-(defun spass-import-password(filename key)
+(defun spass-import-key(filename key)
   (interactive "fPlease specify filename for import: \nsEnter decription key: ")
   (shell-command (concat "spass --import --key " key " --file " filename))
   (message "Done")
