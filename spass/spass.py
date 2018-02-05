@@ -39,7 +39,7 @@ def set(a):
     data[a['account']] = spass.crypt.encrypt(a['set_password'], password + a['account'])
     spass.storage.save(data)
     return a['set_password']
-    
+
 def delete(a):
     check_params(a, ['account'])
     data = load_data()
@@ -82,3 +82,10 @@ def dump_import(a):
         data[k] = spass.crypt.encrypt(item, password + k)
     spass.storage.save(data)
     return True
+
+def get_list(a):
+    ret = []
+    data = load_data()
+    for k in data:
+        ret.append(k)
+    return ret
