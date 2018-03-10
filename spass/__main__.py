@@ -7,7 +7,8 @@ def main():
     func_argv = {}
     default_params = spass.storage.get_params()
     module = 'spass.spass'
-    xclip = True
+    xclip = sys.platform == 'linux'
+    pbcopy = sys.platform == 'darwin'
     opts = list(default_params.items()) + opts
     for o, a in opts:
         if o == '--set-password':
@@ -66,6 +67,8 @@ def main():
     res = getattr(importlib.import_module(module), func)(func_argv)
     if xclip and isinstance(res, str):
         os.system('echo "' + res.replace('"', '\"') + '" | xclip -selection clipboard')
+    elif pbcopy and isinstance(res, str):
+        os.system('echo "' + res.replace('"', '\"') + '" | pbcopy')
     else:
         print(res)
 
