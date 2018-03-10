@@ -23,6 +23,7 @@ def main():
             func_argv['password'] = input('Please enter your password: ')
         if o == '--print':
             xclip = False
+            pbcopy = False
         if o == '--prompt':
             func_argv['password'] = input('Please enter your password: ')
         if o == '--generate':
