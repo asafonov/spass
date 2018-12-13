@@ -23,7 +23,7 @@
 )
 (defun spass-set(account password)
   (interactive "sPlease specify the account: \nsEnter password: ")
-  (shell-command (concat "spass --set " account " --password " password))
+  (shell-command (concat "spass --set " account " " password))
   (message "Done")
 )
 (defun spass-export(filename)
