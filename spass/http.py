@@ -1,5 +1,6 @@
 from spass import spass, crypt, storage
 import urllib.parse
+import json
 
 data = spass.load_data()
 
@@ -11,6 +12,8 @@ def show(req):
         return get(url[5:])
     elif url[0:5] == '/del/':
         return dele(url[5:])
+    elif url[0:6] == '/json/':
+        return as_json()
     else:
         return error404()
 
@@ -117,3 +120,7 @@ def main_page():
     body += "</table></body></html>"
 
     return header + head + body
+
+def as_json():
+    header = get_header("200 OK", {"Content-Type": "text/plain", "Access-Control-Allow-Origin": "*"})
+    return json.dumps(data);
