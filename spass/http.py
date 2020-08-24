@@ -12,7 +12,7 @@ def show(req):
         return get(url[5:])
     elif url[0:5] == '/del/':
         return dele(url[5:])
-    elif url[0:6] == '/json/':
+    elif url[0:6] == '/data/':
         return as_json()
     else:
         return error404()
