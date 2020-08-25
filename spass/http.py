@@ -122,5 +122,5 @@ def main_page():
     return header + head + body
 
 def as_json():
-    header = get_header("200 OK", {"Content-Type": "text/plain", "Access-Control-Allow-Origin": "*"})
-    return json.dumps(data);
+    header = get_header("200 OK", {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*"})
+    return header + json.dumps(data);
