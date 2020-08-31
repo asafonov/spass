@@ -124,4 +124,4 @@ def main_page():
 def as_json():
     print('Data request received')
     header = get_header("200 OK", {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*"})
-    return header + json.dumps(data)
+    return header + json.dumps(spass.load_unencrypted())

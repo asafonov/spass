@@ -49,6 +49,15 @@ def delete(a):
     spass.storage.save(data)
     return True
 
+def load_unencrypted():
+    data = load_data()
+    out = {}
+
+    for k in data:
+        out[k] = spass.crypt.decrypt(data[k], k)
+
+    return out
+
 def dump_export(a):
     check_params(a, ['file'])
     data = load_data()
