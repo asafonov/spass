@@ -4,8 +4,10 @@ import json
 
 data = spass.load_data()
 
-def show(req):
-    url = req.split(' ')[1]
+def show(request):
+    req = request.split("\n")
+    [method, url] = req[0].split(' ')[0:2]
+
     if url == '/':
         return main_page()
     elif url[0:5] == '/get/':
@@ -14,6 +16,10 @@ def show(req):
         return dele(url[5:])
     elif url[0:6] == '/data/':
         return as_json()
+    elif url[0:6] == '/post/' and method == 'POST':
+        return to_json(req[len(req) - 1])
+    elif method == 'OPTIONS':
+        return get_header("200 OK", {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*"})
     else:
         return error404()
 
@@ -125,3 +131,9 @@ def as_json():
     print('Data request received')
     header = get_header("200 OK", {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*"})
     return header + json.dumps(spass.load_unencrypted())
+
+def to_json(sdata):
+    print('Post request received')
+    header = get_header("200 OK", {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*"})
+    len(sdata) > 0 and json.dumps(spass.import_data(json.loads(sdata), False, ''))
+    return header

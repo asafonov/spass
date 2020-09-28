@@ -85,9 +85,8 @@ def daemon():
     print('Serving HTTP on port ' + str(PORT) + ' ...')
     while True:
         client_connection, client_address = listen_socket.accept()
-        request = client_connection.recv(1024)
-        req_s = request.decode('utf-8').split("\n")
-        http_response = spass.http.show(req_s[0])
+        request = client_connection.recv(1024).decode('utf-8')
+        http_response = spass.http.show(request)
 
         client_connection.sendall(http_response.encode("utf-8"))
         client_connection.close()

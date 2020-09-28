@@ -77,19 +77,28 @@ def dump_export(a):
 
 def dump_import(a):
     check_params(a, ['file'])
-    data = load_data()
     key = False
+
     if 'key' in a:
         key = a['key']
+
     new_data = spass.storage.load_json(a['file'])
     password = a['password'] if 'password' in a else ''
+
+    return import_data(new_data, key, password)
+
+def import_data(new_data, key, password):
+    data = load_data()
+
     for k in new_data:
         if key:
             item = spass.crypt.key_decrypt(new_data[k], spass.crypt.hash(key + k))
         else:
             item = new_data[k]
         data[k] = spass.crypt.encrypt(item, password + k)
+
     spass.storage.save(data)
+
     return True
 
 def get_list(a):
