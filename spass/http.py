@@ -19,12 +19,12 @@ class HTTPHandler(BaseHTTPRequestHandler):
 
         if self.path == '/':
             response = self.main_page()
-        elif self.path == '/get/':
+        elif self.path[0:5] == '/get/':
             response = self.get(self.path[5:])
-        elif self.path == '/del/':
-            response = dele(self.path[5:])
+        elif self.path[0:5] == '/del/':
+            response = self.dele(self.path[5:])
         elif self.path == '/data/':
-            response = as_json()
+            response = self.as_json()
         else:
             self._set_headers(404)
 
@@ -46,94 +46,102 @@ class HTTPHandler(BaseHTTPRequestHandler):
         self._set_headers(200, {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*"})
         return json.dumps(spass.load_unencrypted())
 
-def get(account):
-    account = urllib.parse.unquote(account)
-    print('Getting ' + account)
-    if account not in data:
-        return error404()
-    return get_header("200 OK") + crypt.decrypt(data[account], account)
+    def get (self, account):
+        account = urllib.parse.unquote(account)
+        print('Getting ' + account)
 
-def dele(account):
-    account = urllib.parse.unquote(account)
-    print('Deleting ' + account)
-    if account not in data:
-        return error404()
-    del data[account]
-    storage.save(data)
-    return status_ok()
+        if account not in data:
+            self._set_headers(404)
+            return ''
 
-def main_page():
-    print('Displaying main page')
-    header = get_header("200 OK", {"Content-Type": "text/html; charset=UTF-8"})
-    head = """<html><head>
-        <style>
-            * {
-                font-family: monospace;
-                background-color: black;
-                color: #b0c7d4;
-            }
-            td{
-                font-size: 36pt;
-            }
-            table {
-                margin: 12px;
-            }
-            td {
-                padding: 12px;
-                border-bottom: 1px solid #cccccc;
-                margin: 0px;
-            }
-            h1 {
-                font-size: 48pt;
-                text-align: center;
-            },
-            a {
-                cursor: pointer;
-            }
-            .green {
-                color: #66c066;
-            }
-            .red {
-                color: #c06666;
-            }
-        </style>
-        <script>
-            function get(url, callback) {
-                var req = new XMLHttpRequest();
-                if (req) {
-                    req.onreadystatechange = function() {response(callback, req)};
-                    req.open("GET", url, true);
-                    req.send({});
+        self._set_headers(200)
+        return crypt.decrypt(data[account], account)
+
+    def dele (self, account):
+        account = urllib.parse.unquote(account)
+        print('Deleting ' + account)
+
+        if account not in data:
+            self._set_headers(404)
+            return ''
+
+        del data[account]
+        storage.save(data)
+        self._set_headers(200)
+        return ''
+
+    def main_page (self):
+        print('Displaying main page')
+        self._set_headers(200, {"Content-Type": "text/html; charset=UTF-8"})
+        head = """<html><head>
+            <style>
+                * {
+                    font-family: monospace;
+                    background-color: black;
+                    color: #b0c7d4;
                 }
-            }
-
-            function response(callback, req) {
-                if (req.readyState == 4) {
-                    if (req.status == 200) {
-                        callback(req.responseText);
+                td{
+                    font-size: 36pt;
+                }
+                table {
+                    margin: 12px;
+                }
+                td {
+                    padding: 12px;
+                    border-bottom: 1px solid #cccccc;
+                    margin: 0px;
+                }
+                h1 {
+                    font-size: 48pt;
+                    text-align: center;
+                },
+                a {
+                    cursor: pointer;
+                }
+                .green {
+                    color: #66c066;
+                }
+                .red {
+                    color: #c06666;
+                }
+            </style>
+            <script>
+                function get(url, callback) {
+                    var req = new XMLHttpRequest();
+                    if (req) {
+                        req.onreadystatechange = function() {response(callback, req)};
+                        req.open("GET", url, true);
+                        req.send({});
                     }
                 }
-            }
 
-            function show(button, account) {
-                get('/get/' + account, function(password) {
-                    button.parentNode.parentNode.parentNode.getElementsByTagName('td')[1].innerHTML = password.replace('<', '&lt;').replace('>', '&gt;');
-                });
-            }
+                function response(callback, req) {
+                    if (req.readyState == 4) {
+                        if (req.status == 200) {
+                            callback(req.responseText);
+                        }
+                    }
+                }
 
-            function del(button, account) {
-                if (confirm("Are you sure you want to delete " + account)) {
-                    get('/del/' + account, function() {
-                        button.parentNode.parentNode.parentNode.style.display = 'none';
+                function show(button, account) {
+                    get('/get/' + account, function(password) {
+                        button.parentNode.parentNode.parentNode.getElementsByTagName('td')[1].innerHTML = password.replace('<', '&lt;').replace('>', '&gt;');
                     });
                 }
-            }
-        </script>
-    </head>"""
-    body = "<body><h1>Spass Manager UI</h1><table width='100%' cellpadding='0' cellspacing='0'>"
-    for i in data:
-        body += "<tr><td>" + i + "</td><td width='100%'> *** </td><td><nobr><a class='green' onclick='show(this, \"" + i + "\")'>&#128269;</a><a onclick='del(this, \"" + i + "\")' class='red'>&#10060;</a></nobr></td></tr>"
 
-    body += "</table></body></html>"
+                function del(button, account) {
+                    if (confirm("Are you sure you want to delete " + account)) {
+                        get('/del/' + account, function() {
+                            button.parentNode.parentNode.parentNode.style.display = 'none';
+                        });
+                    }
+                }
+            </script>
+        </head>"""
+        body = "<body><h1>Spass Manager UI</h1><table width='100%' cellpadding='0' cellspacing='0'>"
+        for i in data:
+            body += "<tr><td>" + i + "</td><td width='100%'> *** </td><td><nobr><a class='green' onclick='show(this, \"" + i + "\")'>&#128269;</a><a onclick='del(this, \"" + i + "\")' class='red'>&#10060;</a></nobr></td></tr>"
 
-    return header + head + body
+        body += "</table></body></html>"
+
+        return head + body
