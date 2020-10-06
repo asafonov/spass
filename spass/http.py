@@ -1,8 +1,33 @@
 from spass import spass, crypt, storage
 import urllib.parse
 import json
+from http.server import BaseHTTPRequestHandler
 
 data = spass.load_data()
+
+class HTTPHandler(BaseHTTPRequestHandler):
+    def _set_headers(self, status = 200, headers = {}):
+        self.send_response(status)
+
+        for i in headers:
+            self.send_header(i, headers[i])
+
+        self.end_headers();
+
+    def do_GET (self):
+        response = ''
+
+        if self.path == '/data/':
+            response = self.as_json()
+        else:
+            self._set_headers(404)
+
+        self.wfile.write(response.encode('utf-8'))
+
+    def as_json (self):
+        print('Data request received')
+        self._set_headers(200, {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*"})
+        return json.dumps(spass.load_unencrypted())
 
 def show(request):
     req = request.split("\n")

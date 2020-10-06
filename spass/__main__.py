@@ -74,22 +74,19 @@ def main():
         print(res)
 
 def daemon():
-    import socket, spass.http
+    from http.server import HTTPServer
+    from spass.http import HTTPHandler
 
-    HOST, PORT = '', 9092
+    server_address = ('', 9092)
+    httpd = HTTPServer(server_address, HTTPHandler)
 
-    listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    listen_socket.bind((HOST, PORT))
-    listen_socket.listen(1)
-    print('Serving HTTP on port ' + str(PORT) + ' ...')
-    while True:
-        client_connection, client_address = listen_socket.accept()
-        request = client_connection.recv(1024).decode('utf-8')
-        http_response = spass.http.show(request)
+    try:
+        print('Serving HTTP on port ' + str(server_address[1]) + ' ...')
+        httpd.serve_forever()
+    except Exception:
+        pass
 
-        client_connection.sendall(http_response.encode("utf-8"))
-        client_connection.close()
+    httpd.server_close()
 
 if __name__ == "__main__":
     main()
