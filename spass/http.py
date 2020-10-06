@@ -17,42 +17,34 @@ class HTTPHandler(BaseHTTPRequestHandler):
     def do_GET (self):
         response = ''
 
-        if self.path == '/data/':
-            response = self.as_json()
+        if self.path == '/':
+            response = self.main_page()
+        elif self.path == '/get/':
+            response = self.get(self.path[5:])
+        elif self.path == '/del/':
+            response = dele(self.path[5:])
+        elif self.path == '/data/':
+            response = as_json()
         else:
             self._set_headers(404)
 
         self.wfile.write(response.encode('utf-8'))
 
+    def do_OPTIONS (self):
+        self._set_headers(200, {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*"})
+
+    def do_POST (self):
+        print('POST request received')
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+        data = post_data.decode('utf-8')
+        len(data) > 0 and json.dumps(spass.import_data(json.loads(data), False, ''))
+        self._set_headers(200, {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*"})
+
     def as_json (self):
         print('Data request received')
         self._set_headers(200, {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*"})
         return json.dumps(spass.load_unencrypted())
-
-def show(request):
-    req = request.split("\n")
-    [method, url] = req[0].split(' ')[0:2]
-
-    if url == '/':
-        return main_page()
-    elif url[0:5] == '/get/':
-        return get(url[5:])
-    elif url[0:5] == '/del/':
-        return dele(url[5:])
-    elif url[0:6] == '/data/':
-        return as_json()
-    elif url[0:6] == '/post/' and method == 'POST':
-        return to_json(req[len(req) - 1])
-    elif method == 'OPTIONS':
-        return get_header("200 OK", {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*"})
-    else:
-        return error404()
-
-def get_header(status, params = {}):
-    header = "HTTP/1.1 " + status + "\n"
-    for i in params:
-        header += i + ": " +  params[i] + "\n"
-    return header + "\n"
 
 def get(account):
     account = urllib.parse.unquote(account)
@@ -69,12 +61,6 @@ def dele(account):
     del data[account]
     storage.save(data)
     return status_ok()
-
-def error404():
-    return get_header("404 Not Found")
-
-def status_ok():
-    return get_header("200 OK")
 
 def main_page():
     print('Displaying main page')
@@ -151,14 +137,3 @@ def main_page():
     body += "</table></body></html>"
 
     return header + head + body
-
-def as_json():
-    print('Data request received')
-    header = get_header("200 OK", {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*"})
-    return header + json.dumps(spass.load_unencrypted())
-
-def to_json(sdata):
-    print('Post request received')
-    header = get_header("200 OK", {"Content-Type": "text/json", "Access-Control-Allow-Origin": "*"})
-    len(sdata) > 0 and json.dumps(spass.import_data(json.loads(sdata), False, ''))
-    return header
