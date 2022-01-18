@@ -1,7 +1,7 @@
 import uuid, os, pwd, socket
 
 def get_device_id():
-    return uuid.getnode()
+    return get_hostname()
 
 def get_username():
     return pwd.getpwuid(os.getuid()).pw_name
