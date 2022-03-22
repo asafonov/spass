@@ -94,7 +94,7 @@ class HTTPHandler(BaseHTTPRequestHandler):
                 h1 {
                     font-size: 48pt;
                     text-align: center;
-                },
+                }
                 a {
                     cursor: pointer;
                 }
