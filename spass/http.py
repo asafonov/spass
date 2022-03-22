@@ -26,7 +26,12 @@ class HTTPHandler(BaseHTTPRequestHandler):
         elif self.path == '/data/':
             response = self.as_json()
         else:
-            self._set_headers(404)
+            self._set_headers(200, {"Access-Control-Allow-Origin": "*"})
+            f = open(self.path[1:], 'rb')
+            response = f.read()
+            f.close()
+            self.wfile.write(response)
+            return
 
         self.wfile.write(response.encode('utf-8'))
 
@@ -77,14 +82,22 @@ class HTTPHandler(BaseHTTPRequestHandler):
             <style>
                 * {
                     font-family: monospace;
-                    background-color: black;
-                    color: #b0c7d4;
+                    color: red;
+                    padding: 0;
+                    margin: 0;
+                    border: 0;
                 }
-                td{
-                    font-size: 36pt;
+                .background {
+                    background: url(images/01.jpg);
+                    background-size: 100% 100%;
+                    width: 100%;
+                    height: 100%;
+                    position: fixed;
+                    z-index: -1;
+                    opacity: 0.8;
                 }
-                table {
-                    margin: 12px;
+                td {
+                    font-size: 40pt;
                 }
                 td {
                     padding: 12px;
@@ -97,12 +110,6 @@ class HTTPHandler(BaseHTTPRequestHandler):
                 }
                 a {
                     cursor: pointer;
-                }
-                .green {
-                    color: #66c066;
-                }
-                .red {
-                    color: #c06666;
                 }
             </style>
             <script>
@@ -138,9 +145,9 @@ class HTTPHandler(BaseHTTPRequestHandler):
                 }
             </script>
         </head>"""
-        body = "<body><h1>Spass Manager UI</h1><table width='100%' cellpadding='0' cellspacing='0'>"
+        body = "<body><div class='background'></div><h1>Spass Manager UI</h1><table width='100%' cellpadding='0' cellspacing='0'>"
         for i in data:
-            body += "<tr><td>" + i + "</td><td width='100%'> *** </td><td><nobr><a class='green' onclick='show(this, \"" + i + "\")'>&#128269;</a><a onclick='del(this, \"" + i + "\")' class='red'>&#10060;</a></nobr></td></tr>"
+            body += "<tr><td>" + i + "</td><td width='100%'> *** </td><td><nobr><a class='green' onclick='show(this, \"" + i + "\")'>👀</a><a onclick='del(this, \"" + i + "\")' class='red'>🚫</a></nobr></td></tr>"
 
         body += "</table></body></html>"
 
