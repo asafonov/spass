@@ -2,6 +2,7 @@ from spass import spass, crypt, storage
 import urllib.parse
 import json
 from http.server import BaseHTTPRequestHandler
+import os
 
 data = spass.load_data()
 
@@ -27,7 +28,9 @@ class HTTPHandler(BaseHTTPRequestHandler):
             response = self.as_json()
         else:
             self._set_headers(200, {"Access-Control-Allow-Origin": "*"})
-            f = open(self.path[1:], 'rb')
+            home = os.path.realpath(__file__).replace('http.py', '')
+            filename = home + self.path[1:]
+            f = open(filename, 'rb')
             response = f.read()
             f.close()
             self.wfile.write(response)
@@ -81,8 +84,7 @@ class HTTPHandler(BaseHTTPRequestHandler):
         head = """<html><head>
             <style>
                 * {
-                    font-family: monospace;
-                    color: red;
+                    font-family: PoiretOne-Regular;
                     padding: 0;
                     margin: 0;
                     border: 0;
@@ -94,10 +96,11 @@ class HTTPHandler(BaseHTTPRequestHandler):
                     height: 100%;
                     position: fixed;
                     z-index: -1;
-                    opacity: 0.8;
                 }
                 td {
-                    font-size: 40pt;
+                    font-size: 36pt;
+                    font-weight: bold;
+                    color: red;
                 }
                 td {
                     padding: 12px;
@@ -105,8 +108,10 @@ class HTTPHandler(BaseHTTPRequestHandler):
                     margin: 0px;
                 }
                 h1 {
-                    font-size: 48pt;
+                    font-size: 52pt;
                     text-align: center;
+                    padding-bottom: 3%;
+                    color: red;
                 }
                 a {
                     cursor: pointer;
