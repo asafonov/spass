@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+  },
+  "name": "spass",
+  "description": "spass is a simple password manager compatible with your android device.",
+  "version": "0.1.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "bin": {
+    "spass": "./app.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asafonov/spass.git"
+  },
+  "keywords": [
+    "cli"
+  ],
+  "author": "Alexander Safonov <me@asafonov.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/asafonov/spass/issues"
+  },
+  "homepage": "https://github.com/asafonov/spass#readme"
+}
