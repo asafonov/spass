@@ -9,18 +9,23 @@ const doOptions = res => {
   res.end()
 }
 
+const getDataFilename = () => {
+  const dirName = `${process.env.HOME}/.config/spass`
+  const filename = `${dirName}/data`
+  return {dirName, filename}
+}
+
 const save = body => {
   if (body === null || body === undefined || body.length === 0) return
 
   const obj = JSON.parse(body)
   const fs = require('fs')
-  const dirName = `${process.env.HOME}/.config/spass`
+  const {dirName, filename} = getDataFilename()
 
   try {
     fs.mkdirSync(dirName, {recursive: true})
   } catch {}
 
-  let filename = `${dirName}/data`
   let data = 'module.exports = {\n'
 
   for (let k in obj) {
@@ -47,13 +52,27 @@ const doPost = (req, res) => {
   })
 }
 
+doGet = (req, res) => {
+  if (req.url === '/data/') {
+    const {filename} = getDataFilename()
+    const data = require(filename)
+    res.writeHead(200, {
+      'Content-Type': 'text/json',
+      'Access-Control-Allow-Origin': '*'
+    })
+    res.write(JSON.stringify(data))
+    res.end()
+  }
+}
+
 const init = () => {
   http.createServer((req, res) => {
-    console.log(req.method)
     if (req.method === 'OPTIONS') {
       doOptions(res)
     } else if (req.method === 'POST') {
       doPost(req, res)
+    } else if (req.method === 'GET') {
+      doGet(req, res)
     }
 
   }).listen(9092)
